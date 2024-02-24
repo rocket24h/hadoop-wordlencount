@@ -1,0 +1,3 @@
+com/hadoop/mapreduce/WordLengthCount.class
+com/hadoop/mapreduce/TonkenizerReducer.class
+com/hadoop/mapreduce/TokenizerMapper.class
