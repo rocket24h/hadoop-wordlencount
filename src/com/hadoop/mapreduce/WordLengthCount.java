@@ -5,6 +5,7 @@ package com.hadoop.mapreduce;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
 // import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -51,14 +52,17 @@ public class WordLengthCount {
 
   public static void main(String[] args) throws Exception {
     Configuration conf = new Configuration();
-    Job job = Job.getInstance(conf, "word count");
+    Job job = Job.getInstance(conf, "Word length count");
     job.setJarByClass(WordLengthCount.class);
     job.setMapperClass(TokenizerMapper.class);
-    job.setCombinerClass(TonkenizerReducer.class);
-    job.setReducerClass(TonkenizerReducer.class);
-    
+    // job.setCombinerClass(TonkenizerReducer.class); -- Combiner not necessary, and input must match types with mapper's output
+    // Do not uncomment - main source of error.
+    job.setReducerClass(TokenizerReducer.class);
+    job.setMapOutputKeyClass(Text.class);
+    job.setMapOutputValueClass(IntWritable.class);
     job.setOutputKeyClass(Text.class);
     job.setOutputValueClass(Text.class);
+
     FileInputFormat.addInputPath(job, new Path(args[0]));
     FileOutputFormat.setOutputPath(job, new Path(args[1]));
     System.exit(job.waitForCompletion(true) ? 0 : 1);
